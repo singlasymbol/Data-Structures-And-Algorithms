@@ -167,6 +167,67 @@ class LinkedList{
 		return true;
 	}
 
+	public void removeDuplicatesInUnsortedList(Node node){
+
+		Node ptr = node;
+		Node ptr1 = node.next;
+
+		while(ptr != null){
+			ptr1 = ptr.next;
+			Node prev = ptr;
+
+			while(ptr1 != null){
+				if(ptr.val == ptr1.val){
+					prev.next = ptr1.next;
+					ptr1 = prev.next;
+				}else{
+					prev = ptr1;
+					ptr1 = ptr1.next;
+				}
+			}
+			ptr = ptr.next;
+		}
+	}
+
+	public void removeDuplicatesInSortedlist(Node node){
+
+		Node ptr = node;
+		Node ptr1 = node.next;
+
+		while(ptr != null && ptr.next != null){
+			if(ptr.next.val == ptr.val){
+				ptr.next = ptr.next.next;
+			}else{
+				ptr = ptr.next;
+			}
+		}
+	}
+
+	public Node removeAllDuplicatedinASortedList(Node node){
+		Node temp = new Node(-1);
+
+		temp.next = node;
+		Node curr = node;
+		Node prev = temp; 
+		while(curr != null){
+
+			while(curr.next != null && curr.next.val == prev.next.val){
+				curr = curr.next;
+			}
+
+			if(prev.next == curr){
+				prev = prev.next;
+			}else{
+				prev.next = curr.next;
+			}
+
+			curr = curr.next;
+		}
+
+		return node = temp.next;
+
+	}
+
 	public boolean isPalindrome(){
 
 		Node mid = getMidNode();
@@ -178,15 +239,21 @@ class LinkedList{
 	public static void main(String[] args){
 		LinkedList ll = new LinkedList();
 		
-		ll.insertAtEnd(5);
-		ll.insertAtEnd(6);
-		ll.insertAtEnd(6);
-		ll.insertAtEnd(5);
+		ll.insertAtEnd(2);
+		ll.insertAtEnd(2);
 		ll.insertAtEnd(3);
-		ll.insertAtStart(3);
+		ll.insertAtEnd(3);
+		ll.insertAtEnd(4);
+		ll.insertAtEnd(4);
+		ll.insertAtEnd(1);
+		ll.insertAtStart(1);
 		ll.print(head);
 		
-		System.out.println(ll.isPalindrome() ? "list is Palindrome" : "list is not Palindrome");
+		head = ll.removeAllDuplicatedinASortedList(head);
+		//ll.removeDuplicatesInSortedlist(head);
+		//ll.removeDuplicatesInUnsortedList(head);
+
+		// System.out.println(ll.isPalindrome() ? "list is Palindrome" : "list is not Palindrome");
 		//ll.getMidNode();
 		//head  = ll.reverseIterative(head);
 		//ll.nthNodeFromEndWithoutHead(2);

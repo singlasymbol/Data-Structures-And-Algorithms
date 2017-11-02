@@ -1,3 +1,4 @@
+import java.util.*;
 class Node{
 	int val;
 	Node left;
@@ -25,7 +26,7 @@ class BST{
 			return;
 		}
 		inorder(node.left);
-		System.out.println(node.val);
+		System.out.print(node.val + " ");
 		inorder(node.right);
 	}
 
@@ -43,6 +44,23 @@ class BST{
 		return node;
 	}
 
+	public void levelOrderTraversal(Node node){
+		Queue<Node> q = new LinkedList<Node>();
+
+		q.add(node);
+
+		while(!q.isEmpty()){
+			Node temp = q.poll();
+			System.out.print(temp.val + " ");
+
+			if(temp.left != null)
+				q.add(temp.left);
+
+			if(temp.right != null)
+				q.add(temp.right);
+		}
+	}
+
 	public static void main(String[] args){
 		BST bst = new BST();
 		root = bst.insert(root,4);
@@ -52,5 +70,7 @@ class BST{
 		root = bst.insert(root,8);
 
 		bst.inorder(root);
+		System.out.println();
+		bst.levelOrderTraversal(root);
 	}
 }
