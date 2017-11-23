@@ -236,20 +236,73 @@ class LinkedList{
 		return iterateAndMatchList(head,mid.next);
 	}
 
+	public Node partitionList(Node node, int data){
+
+		// Objective is to 
+		//Given a linked list and a value x, partition it such that all nodes less than x come before nodes greater than or equal to x.\
+		//You should preserve the original relative order of the nodes in each of the two partitions.
+
+		Node greaterHead = null;
+		Node smallerHead = null;
+		Node smallerTail = null;
+		Node greaterTail = null;
+		Node curr = head;
+
+		while(curr != null){
+			// System.out.println(curr.val);]
+
+			if(curr.val >= data){
+								 System.out.println("Node val greater" + curr.val);
+				if(greaterHead == null){
+					greaterHead = curr;
+					greaterTail = curr;
+					curr= curr.next;
+				}else{
+					greaterTail.next = curr;
+					greaterTail = curr;
+					curr = curr.next;
+					greaterTail.next = null;
+				}	
+			}else{
+				 System.out.println("Node val " + curr.val);
+				if(smallerHead == null){
+					smallerHead = curr;
+					smallerTail = curr;
+					curr = curr.next;
+				}else{
+					smallerTail.next = curr;
+					smallerTail = curr;
+					curr = curr.next;
+					smallerTail.next = null;
+				}
+			}
+		}
+
+		if(smallerTail != null){
+			smallerTail.next = greaterHead;
+			return smallerHead;
+		}
+		return greaterHead;
+	}
+
 	public static void main(String[] args){
 		LinkedList ll = new LinkedList();
 		
 		ll.insertAtEnd(2);
-		ll.insertAtEnd(2);
-		ll.insertAtEnd(3);
-		ll.insertAtEnd(3);
 		ll.insertAtEnd(4);
+		ll.insertAtEnd(4);
+		ll.insertAtEnd(2);
 		ll.insertAtEnd(4);
 		ll.insertAtEnd(1);
+		ll.insertAtEnd(5);
 		ll.insertAtStart(1);
 		ll.print(head);
 		
-		head = ll.removeAllDuplicatedinASortedList(head);
+		
+
+		// head = ll.partitionList(head,3);
+		// ll.print(head);
+		//head = ll.removeAllDuplicatedinASortedList(head);
 		//ll.removeDuplicatesInSortedlist(head);
 		//ll.removeDuplicatesInUnsortedList(head);
 
@@ -260,6 +313,8 @@ class LinkedList{
 		// ll.reverseRecurrsive(head);
 		//ll.deleteNthNode(10);
 		
+
+
 		ll.print(head);
 
 	}
