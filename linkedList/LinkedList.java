@@ -252,7 +252,7 @@ class LinkedList{
 			// System.out.println(curr.val);]
 
 			if(curr.val >= data){
-								 System.out.println("Node val greater" + curr.val);
+    			System.out.println("Node val greater" + curr.val);
 				if(greaterHead == null){
 					greaterHead = curr;
 					greaterTail = curr;
