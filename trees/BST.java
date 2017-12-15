@@ -263,6 +263,117 @@ class BST{
 		}
 	}
 
+
+	public Node lowestCommonAncestor(Node node, int key1, int key2){
+
+		if(node == null){
+			return null;
+		}
+
+		if(node.val > key1 && node.val > key2){
+			return lowestCommonAncestor(node.left, key1, key2);
+		}
+
+
+		if(node.val < key1 && node.val < key2){
+			return lowestCommonAncestor(node.right, key1, key2);
+		}
+
+		return node;
+	}
+
+	public int distanceBetweenTwoNode(Node node, int key1, int key2){
+		// the idea is to find the lca first and then find the distance of the keys from lca and return the sum.
+		Node lca = lowestCommonAncestor(node, key1, key2);
+		int d1 = distanceOfKeyFromAncestor(lca, key1, 0);
+		int d2 = distanceOfKeyFromAncestor(lca, key2, 0);
+
+		// ANOTHER WAY of solving it can be using this -> Dist(n1, n2) = Dist(root, n1) + Dist(root, n2) - 2*Dist(root, lca) ;
+		//this method will have more complexity as we will have to find the distance of lca extra than the method we are using.
+		
+		return d1 + d2;
+	}
+
+	public int distanceOfKeyFromAncestor(Node node, int key, int distance){
+		if(node == null){
+			return -1;
+		} 
+
+		if(node.val == key){
+			return distance;
+		}
+
+		int d1 = distanceOfKeyFromAncestor(node.left, key, distance + 1);
+		int d2 = distanceOfKeyFromAncestor(node.right, key, distance + 1);
+
+		if(d1 != -1){
+			return d1;
+		}
+
+		return d2;
+	}
+
+	public void printCommonNodes(Node node, int key1,int key2){
+		ArrayList<Node> arr = new ArrayList<Node>();
+		printCommonNodesUtil(node, key1, key2, arr);
+
+		for(int i = 0;i < arr.size();i++)
+			System.out.println(arr.get(i).val);
+	}
+
+	public void printCommonNodesUtil(Node node, int key1, int key2,ArrayList<Node> arr){
+
+		if(node == null){
+			return;
+		}
+
+		if(node.val > key1 && node.val > key2){
+			
+			arr.add(node);
+			printCommonNodesUtil(node.left, key1, key2, arr);
+
+		}else if(node.val < key1 && node.val < key2){
+			
+			arr.add(node);
+			printCommonNodesUtil(node.right, key1, key2, arr);
+		
+		}else{
+			//lca	
+			arr.add(node);
+		
+		}
+
+		return;
+	}
+
+	public void printCommonNodesWithoutUsingExtraSpace(Node node, int key1, int key2){
+		Node lca = lowestCommonAncestor(node, key1, key2);
+		printNodesInPath(node, lca.val);
+	}
+
+	public void printNodesInPath(Node node, int lca){
+		if(node == null){
+			return;
+		}
+
+		if(node.val > lca){
+			System.out.println(node.val + " ");
+			printNodesInPath(node.left, lca);
+		}
+
+		if(node.val < lca){
+			System.out.println(node.val + " ");
+			printNodesInPath(node.right, lca);			
+		}
+
+		if(node.val == lca){
+			System.out.println(node.val + " ");
+			return;
+		}
+
+		return;
+	}
+
 	public static void main(String[] args){
 		BST bst = new BST();
 		Scanner scan = new Scanner(System.in);
@@ -271,8 +382,7 @@ class BST{
 
 		// for(int i = 0; i < number_of_nodes ;i++){
 		// 	root = bst.insert(root,scan.nextInt());
-		// }
-		root = bst.insert(root,20);
+		//  		root = bst.insert(root,20);
 		root = bst.insert(root,10);
 		root = bst.insert(root,30);
 		root = bst.insert(root,5);
@@ -295,6 +405,12 @@ class BST{
 		//bst.reverseLevelOrderTraversal(root);
 		//bst.verticalOrderTraversalUsingLevelOrderTraversal(root);
 		//perfect binary tree - basically every node should have a outdegree of 2
-		bst.perfectBinaryTreeSpecificLevelOrderTraversal(root);
+		// bst.perfectBinaryTreeSpecificLevelOrderTraversal(root);
+		//bst.lowestCommonAncestor(root, 27, 21);
+		// System.out.println(bst.distanceBetweenTwoNode(root,15,17));
+		bst.printCommonNodes(root, 15,17);
+		System.out.println("---");
+		bst.printCommonNodesWithoutUsingExtraSpace(root, 15,17);
+
 	}
 }
