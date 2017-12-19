@@ -27,16 +27,19 @@ class VerticalTraversalNode{
 class BST{
 
 	static Node root;
+	static Node root1;
 
 	BST()
 	{
 		root = null;
+		root1 = null;
 	}
 
 	public void inorder(Node node){
 		if(node == null){
 			return;
 		}
+
 		inorder(node.left);
 		System.out.print(node.val + " ");
 		inorder(node.right);
@@ -374,6 +377,84 @@ class BST{
 		return;
 	}
 
+	public void deleteAllTree(Node node){
+		// do a postorder traversal and make every node as null;
+		if(node == null){
+			return;
+		}
+
+		deleteAllTree(node.left);
+		deleteAllTree(node.right);
+		System.out.println("deleting "+ node.val);
+		node = null;
+
+	}
+
+	public int heightOfTree(Node node){
+		if(node == null){
+			return 0;
+		}
+
+		return 1 + Math.max(heightOfTree(node.left),heightOfTree(node.right));
+	}
+
+	public boolean checkIdenticalTrees(Node node1, Node node2){
+		if(node1 == null && node2 == null){
+			return true;
+		}
+
+		if(node1 != null && node2 != null){
+			return (node1.val == node2.val) && checkIdenticalTrees(node1.left,node2.left) && checkIdenticalTrees(node1.right, node2.right);
+		}
+		System.out.println(node1 + " "  + (node2.val));
+		return false;
+	}
+
+	public int sizeOfTree(Node node){
+		if(node == null){
+			return 0;
+		}
+		return 1 + sizeOfTree(node.left) + sizeOfTree(node.right);
+	}
+
+	public boolean rootToLeafPathSum(Node node,int sum){
+		if(node == null){
+			return false;
+		}
+
+		if(node.left == null && node.right == null){
+			return (node.val == sum);
+		}
+
+		return rootToLeafPathSum(node.left, sum - node.val) || rootToLeafPathSum(node.right, sum - node.val);
+	}
+
+	public boolean heightBalancedTree(Node node){
+
+		if(node == null){
+			return true;
+		}
+
+		boolean left = heightBalancedTree(node.left);
+		boolean right = heightBalancedTree(node.right);
+
+		int leftHeight = heightOfTree(node.left);
+		int rightHeight = heightOfTree(node.right);
+
+		return left && right && (Math.abs(leftHeight - rightHeight) <= 1);
+	}
+
+	public int diameterOfTree(Node node){
+		if(node == null){
+			return 0;
+		}
+
+		int leftHeight = heightOfTree(node.left);
+		int rightHeight = heightOfTree(node.right);
+
+		return Math.max(leftHeight + rightHeight,Math.max(diameterOfTree(node.left),diameterOfTree(node.right)));
+	}
+
 	public static void main(String[] args){
 		BST bst = new BST();
 		Scanner scan = new Scanner(System.in);
@@ -408,9 +489,19 @@ class BST{
 		// bst.perfectBinaryTreeSpecificLevelOrderTraversal(root);
 		//bst.lowestCommonAncestor(root, 27, 21);
 		// System.out.println(bst.distanceBetweenTwoNode(root,15,17));
-		bst.printCommonNodes(root, 15,17);
-		System.out.println("---");
-		bst.printCommonNodesWithoutUsingExtraSpace(root, 15,17);
+		//bst.printCommonNodes(root, 15,17);
+		//System.out.println("---");
+		//bst.printCommonNodesWithoutUsingExtraSpace(root, 15,17);
+		//System.out.println(bst.heightOfTree(root));	
 
+		// bst.deleteAllTree(root);
+		// bst.inorder(root);
+
+		//System.out.println(bst.checkIdenticalTrees(root,root1));
+		//System.out.println(bst.sizeOfTree(root));
+
+		//System.out.println(bst.rootToLeafPathSum(root,68));
+		// System.out.println(bst.heightBalancedTree(root));
+		System.out.println("Diameter of tree is " + (1+  bst.diameterOfTree(root)));
 	}
 }
