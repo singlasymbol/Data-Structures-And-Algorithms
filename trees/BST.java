@@ -1,15 +1,18 @@
 import java.util.*;
 import java.util.Map.Entry;
 
+
 class Node{
 	int val;
 	Node left;
 	Node right;
+	Node next;
 
 	Node(int key){
 		val = key;
 		left = null;
 		right = null;
+		next = null;
 	}
 
 }
@@ -27,12 +30,10 @@ class VerticalTraversalNode{
 class BST{
 
 	static Node root;
-	static Node root1;
 
 	BST()
 	{
 		root = null;
-		root1 = null;
 	}
 
 	public void inorder(Node node){
@@ -455,6 +456,244 @@ class BST{
 		return Math.max(leftHeight + rightHeight,Math.max(diameterOfTree(node.left),diameterOfTree(node.right)));
 	}
 
+	public void printArrayList(ArrayList<Integer> arr){
+		for(int j =0 ; j < arr.size();j++){
+			System.out.print(arr.get(j) + " ");
+		}
+	}
+
+	static ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
+
+	public void printAllRootToLeafPaths(Node node){
+		ArrayList<Integer> arr = new ArrayList<Integer>();
+
+		printRootToLeafUtil(node, arr ,0 , 107);
+
+		for(int i = 0; i < result.size();i++){
+			ArrayList<Integer> a = result.get(i);
+
+			for(int j =0 ; j < a.size();j++){
+				System.out.print(a.get(j) + " ");
+			}
+			System.out.println();
+		}
+	}
+
+	public void printRootToLeafUtil(Node node, ArrayList<Integer> arr,int sum , int sumToFind){
+		if(node == null){
+			return;
+		}
+		arr.add(node.val);
+		sum = sum + node.val;
+		if(node.right == null && node.left == null){
+			if(sum == sumToFind){
+				ArrayList a = new ArrayList<Integer>();
+				for(int i = 0;i < arr.size();i++){
+					a.add(arr.get(i));
+				}
+				result.add(a);
+			}
+		}
+	
+		printRootToLeafUtil(node.left, arr, sum , sumToFind);
+		printRootToLeafUtil(node.right, arr, sum , sumToFind);
+
+		arr.remove(arr.size() - 1);
+
+	}
+
+	// public void populateInorderSuccessors(Node node, int prev){
+	// 	if(node == null){
+	// 		return;
+	// 	}
+
+	// 	populateInorderSuccessors(node.right, prev);
+	// 	node.next = prev;
+	// 	prev = node.val;
+	// 	populateInorderSuccessors(node.left, prev);
+		
+	// }
+
+	// public void inorderWithNext(Node node){
+	// 	if(node == null){
+	// 		return;
+	// 	}
+
+	// 	inorderWithNext(node.left);
+	// 	System.out.println("Node val " + node.val + "next val "+ node.next.val);
+	// 	inorderWithNext(node.right);
+	// }
+
+	public void connectNodesAtSamelevelUsingLevelOrderTraversal(Node node){
+		// the idea is to traverse using a queue , and keep pushing 'null' as soon as a level ends.
+
+		Queue<Node> queue = new LinkedList<Node>();
+		queue.add(node);
+		queue.add(null);
+
+		while(!queue.isEmpty()){
+			Node temp = queue.poll();
+
+			if(temp != null){
+
+				temp.next = queue.peek();
+				if(temp.left != null){
+					queue.add(temp.left);
+				}
+
+				if(temp.right != null){
+					queue.add(temp.right);
+				}
+			}else if(!queue.isEmpty()){
+				queue.add(null);
+			}
+
+		}
+	}
+
+	public void printLevel(Node node){
+		System.out.println("Printing level");
+		while(node != null){
+			System.out.print(node.val + " ");
+			node = node.next;
+		}
+		System.out.println();
+	}
+
+	public void connectNodesAtSameLevelWithoutExtraSpace(Node node){
+		// this method is only applicable in a complete binary tree.
+		// the idea is to keep updating the parent's next in a Pre-Order manner. 
+		// and attaching the left children's next to right and right children's next to parent's next's left.
+
+		if(node == null || node.left == null || node.right == null){
+			return;
+		}
+
+
+		node.left.next = node.right;
+		if(node.next != null){
+			node.right.next = node.next.left;
+		}
+
+		connectNodesAtSameLevelWithoutExtraSpace(node.left);
+		connectNodesAtSameLevelWithoutExtraSpace(node.right);
+	}
+
+	public int calculateSum(Node node, int sum){
+		if(node == null){
+			return sum;
+		}
+		//System.out.println("node val " + node.val + " sum " + sum);
+		sum = calculateSum(node.left,sum);
+		sum = sum + node.val;
+		sum = calculateSum(node.right,sum);
+
+		return sum;
+	}
+
+	public boolean isSumTree(Node node){
+		// A sum Tree is a binary tree where the sum of its left subtree and right subtree is equal to root's data;
+		if(node == null){
+			return true;
+		}
+		boolean isLeft = isSumTree(node.left);
+		int leftSum = calculateSum(node.left, 0 );
+		int RightSum = calculateSum(node.right, 0);
+		boolean isRight = isSumTree(node.right);
+
+		return (isLeft && ((leftSum + RightSum == node.val) || (node.right == null && node.left == null)) && isRight);
+
+	}
+
+	public boolean printAncestors(Node node, int valToFind){
+		if(node == null){
+			return false;
+		}
+
+		if(node.val == valToFind){
+			return true;
+		}
+
+		if(printAncestors(node.left, valToFind) || printAncestors(node.right, valToFind)){
+			System.out.println("Ancestor " + node.val);
+			return true;
+		}
+
+		return false;
+	}
+
+	public void levelOfNodeBinaryTree(Node node, int valToFind, int level){
+		if(node == null){
+			return ;
+		}
+
+		levelOfNodeBinaryTree(node.left, valToFind, level + 1);
+		if(node.val == valToFind){
+			System.out.println("level  "+ level);
+			return;
+		}
+
+		levelOfNodeBinaryTree(node.right, valToFind, level + 1);
+
+		return ;
+	}
+
+ 	int leftFarthest = 0;
+	int rightFarthest = 0;
+
+	public void widthOfBinaryTree(Node node){
+		// System.out.println(widthOfBinaryTreeUtil(node, 0, 0, Integer.MAX_VALUE, 0));
+		widthOfBinaryTreeUtil(node, 0, 0);
+		System.out.println(" width of binary tree " +(rightFarthest - leftFarthest + 1));
+	}
+
+	public void widthOfBinaryTreeUtil(Node node, int leftLevel, int rightLevel){
+		if(node == null){
+			return;
+		}
+
+		if(leftLevel < leftFarthest){
+			leftFarthest = leftLevel;
+			System.out.println("left farthest "+ leftFarthest + " node val " + node.val);
+		}
+
+		if(rightLevel > rightFarthest){
+			rightFarthest = rightLevel;
+			System.out.println("right Farthest  "+ rightFarthest + " node val " + node.val);
+		}
+
+		widthOfBinaryTreeUtil(node.left, leftLevel - 1, rightLevel);
+		widthOfBinaryTreeUtil(node.right, leftLevel, rightLevel + 1);
+
+	}
+
+	public void diagonalOrderTraversalUtil(Node node, int verticalDistance, HashMap<Integer,Vector<Integer>> DiagonalMap){
+		if(node == null){
+			return;
+		}
+
+		Vector<Integer> getVector = DiagonalMap.get(verticalDistance);
+
+		if(getVector == null){
+			getVector = new Vector<Integer>();
+		}
+		getVector.add(node.val);
+
+		DiagonalMap.put(verticalDistance, getVector);
+
+		diagonalOrderTraversalUtil(node.left, verticalDistance - 1, DiagonalMap);
+		diagonalOrderTraversalUtil(node.right, verticalDistance, DiagonalMap);
+	}
+
+	public void diagonalOrderTraversal(Node node){
+		HashMap<Integer, Vector<Integer>> DiagonalMap = new HashMap<Integer, Vector<Integer>>();
+		diagonalOrderTraversalUtil(node, 0, DiagonalMap);
+
+		for(Entry<Integer,Vector<Integer>> e : DiagonalMap.entrySet()){
+			System.out.println(e.getValue());
+		}
+	}
+
 	public static void main(String[] args){
 		BST bst = new BST();
 		Scanner scan = new Scanner(System.in);
@@ -464,6 +703,12 @@ class BST{
 		// for(int i = 0; i < number_of_nodes ;i++){
 		// 	root = bst.insert(root,scan.nextInt());
 		//  		root = bst.insert(root,20);
+		// root = bst.insert(root,26);
+		// root.left = new Node(10);
+		// root.left.left = new Node(4);
+		// root.left.right = new Node(6);
+		// root.right = new Node(3);
+		// root.right.right = new Node(3);
 		root = bst.insert(root,10);
 		root = bst.insert(root,30);
 		root = bst.insert(root,5);
@@ -477,7 +722,24 @@ class BST{
 		root = bst.insert(root,21);
 		root = bst.insert(root,27);
 		root = bst.insert(root,35);
-		root = bst.insert(root,45);
+		 root = bst.insert(root,45);
+		 
+		// complete binary tree
+		// root = bst.insert(root,50);
+		// root = bst.insert(root,20);
+		// root = bst.insert(root,100);
+		// root = bst.insert(root,10);
+		// root = bst.insert(root,30);
+		// root = bst.insert(root,70);
+		// root = bst.insert(root,120);
+		// root = bst.insert(root,5);
+		// root = bst.insert(root,15);
+		// root = bst.insert(root,25);
+		// root = bst.insert(root,35);
+		// root = bst.insert(root,60);
+		// root = bst.insert(root,80);
+		// root = bst.insert(root,110);
+		// root = bst.insert(root,130);
 
 		bst.inorder(root);
 		System.out.println();
@@ -502,6 +764,24 @@ class BST{
 
 		//System.out.println(bst.rootToLeafPathSum(root,68));
 		// System.out.println(bst.heightBalancedTree(root));
-		System.out.println("Diameter of tree is " + (1+  bst.diameterOfTree(root)));
+		// System.out.println("Diameter of tree is " + (1+  bst.diameterOfTree(root)));
+		//bst.printAllRootToLeafPaths(root);
+		// bst.populateNext(root); TODO
+		// bst.inorderWithNext(root); TODO
+
+		//------------- connect nodes at same LEVEL -------------
+		// bst.connectNodesAtSamelevelUsingLevelOrderTraversal(root);
+		// bst.printLevel(root.left.right);
+
+		// bst.connectNodesAtSameLevelWithoutExtraSpace(root); // this method is only applicable in a complete binary tree.
+		// bst.printLevel(root.left.left.left);
+
+		//------------------------------
+		// System.out.println(bst.isSumTree(root));
+		//System.out.println("sum is " + bst.calculateSum(root.right.right, 0));
+		// System.out.println("Value Found " + bst.printAncestors(root, 111));
+		// bst.levelOfNodeBinaryTree(root, 27, 0);
+		// bst.widthOfBinaryTree(root);
+		bst.diagonalOrderTraversal(root);
 	}
 }
