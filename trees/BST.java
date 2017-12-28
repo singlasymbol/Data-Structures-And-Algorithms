@@ -446,6 +446,7 @@ class BST{
 	}
 
 	public int diameterOfTree(Node node){
+		// The diameter of a tree (sometimes called the width) is the number of nodes on the longest path between two leaves in the tree.
 		if(node == null){
 			return 0;
 		}
@@ -467,7 +468,7 @@ class BST{
 	public void printAllRootToLeafPaths(Node node){
 		ArrayList<Integer> arr = new ArrayList<Integer>();
 
-		printRootToLeafUtil(node, arr ,0 , 107);
+		printRootToLeafUtil(node, arr );
 
 		for(int i = 0; i < result.size();i++){
 			ArrayList<Integer> a = result.get(i);
@@ -479,24 +480,24 @@ class BST{
 		}
 	}
 
-	public void printRootToLeafUtil(Node node, ArrayList<Integer> arr,int sum , int sumToFind){
+	public void printRootToLeafUtil(Node node, ArrayList<Integer> arr){
 		if(node == null){
 			return;
 		}
 		arr.add(node.val);
-		sum = sum + node.val;
+		// sum = sum + node.val;
 		if(node.right == null && node.left == null){
-			if(sum == sumToFind){
+			// if(sum == sumToFind){
 				ArrayList a = new ArrayList<Integer>();
 				for(int i = 0;i < arr.size();i++){
 					a.add(arr.get(i));
 				}
 				result.add(a);
-			}
+			// }
 		}
 	
-		printRootToLeafUtil(node.left, arr, sum , sumToFind);
-		printRootToLeafUtil(node.right, arr, sum , sumToFind);
+		printRootToLeafUtil(node.left, arr);
+		printRootToLeafUtil(node.right, arr);
 
 		arr.remove(arr.size() - 1);
 
@@ -694,6 +695,89 @@ class BST{
 		}
 	}
 
+	public void doubleTree(Node node){
+		if(node == null){
+			return;
+		}
+
+		Node duplicate = new Node(node.val);
+		duplicate.left = node.left;
+		node.left = duplicate;
+
+		doubleTree(node.left.left);
+		doubleTree(node.right);
+	}
+
+	public void preOrder(Node node){
+		if(node == null){
+			return;
+		}
+
+		System.out.print(node.val + " ");
+		preOrder(node.left);
+		preOrder(node.right);
+	}
+
+	public void printAllNumbersRootToLeafAsASingleNumber(Node node, int val){
+		if(node == null){
+			return;
+		}
+
+		val = val * 10 + node.val;
+
+		// cSystem.out.println(" val " + val);
+		if(node.left == null && node.right == null){
+			System.out.println(" endNode " + val);
+		}
+
+		printAllNumbersRootToLeafAsASingleNumber(node.left, val);
+		printAllNumbersRootToLeafAsASingleNumber(node.right, val);
+	}
+
+
+	public void printLeftView(Node node){
+		HashMap<Integer, Integer> hm = new HashMap<Integer, Integer>();
+
+		hm.put(0, node.val);
+
+		printLeftViewUtil(node, hm ,0);
+		for(Entry<Integer, Integer> e : hm.entrySet()){
+			System.out.println(e);
+		}
+		printLeftViewUtilWithoutExtraSpace(node, 0);
+
+	}
+	
+	static int maxLevel = 0;
+
+	public void printLeftViewUtil(Node node,HashMap<Integer, Integer>  hm, int level){
+
+		if(node == null){
+			return;
+		}
+
+		if(hm.get(level) == null)
+			hm.put(level, node.val);
+
+		printLeftViewUtil(node.left, hm, level + 1);
+		printLeftViewUtil(node.right, hm, level + 1);
+		
+	}
+
+	public void printLeftViewUtilWithoutExtraSpace(Node node, int currLevel){
+		if(node == null){
+			return;
+		}
+
+		if(currLevel > maxLevel){
+			System.out.println(" val " + node.val);
+			maxLevel = currLevel;
+		}
+		printLeftViewUtilWithoutExtraSpace(node.left, currLevel + 1);
+		printLeftViewUtilWithoutExtraSpace(node.right, currLevel + 1);
+
+	}
+
 	public static void main(String[] args){
 		BST bst = new BST();
 		Scanner scan = new Scanner(System.in);
@@ -746,13 +830,13 @@ class BST{
 		//bst.levelOrderTraversal(root);
 		// bst.levelOrderTraversalLineByLine(root);
 		//bst.reverseLevelOrderTraversal(root);
-		//bst.verticalOrderTraversalUsingLevelOrderTraversal(root);
+		// bst.verticalOrderTraversalUsingLevelOrderTraversal(root);
 		//perfect binary tree - basically every node should have a outdegree of 2
 		// bst.perfectBinaryTreeSpecificLevelOrderTraversal(root);
 		//bst.lowestCommonAncestor(root, 27, 21);
 		// System.out.println(bst.distanceBetweenTwoNode(root,15,17));
 		//bst.printCommonNodes(root, 15,17);
-		//System.out.println("---");
+		// cSystem.out.println("---");
 		//bst.printCommonNodesWithoutUsingExtraSpace(root, 15,17);
 		//System.out.println(bst.heightOfTree(root));	
 
@@ -765,7 +849,7 @@ class BST{
 		//System.out.println(bst.rootToLeafPathSum(root,68));
 		// System.out.println(bst.heightBalancedTree(root));
 		// System.out.println("Diameter of tree is " + (1+  bst.diameterOfTree(root)));
-		//bst.printAllRootToLeafPaths(root);
+		// bst.printAllRootToLeafPaths(root);
 		// bst.populateNext(root); TODO
 		// bst.inorderWithNext(root); TODO
 
@@ -782,6 +866,12 @@ class BST{
 		// System.out.println("Value Found " + bst.printAncestors(root, 111));
 		// bst.levelOfNodeBinaryTree(root, 27, 0);
 		// bst.widthOfBinaryTree(root);
-		bst.diagonalOrderTraversal(root);
+		// bst.diagonalOrderTraversal(root);
+
+		// bst.doubleTree(root);
+		// bst.preOrder(root);
+		// bst.printAllNumbersRootToLeafAsASingleNumber(root,0);
+		bst.printLeftView(root);
+
 	}
 }
