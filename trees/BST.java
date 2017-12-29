@@ -7,12 +7,14 @@ class Node{
 	Node left;
 	Node right;
 	Node next;
+	int tempVal;
 
 	Node(int key){
 		val = key;
 		left = null;
 		right = null;
 		next = null;
+		tempVal = 0;
 	}
 
 }
@@ -778,6 +780,71 @@ class BST{
 
 	}
 
+ 	int max = 0;
+
+	public void maximumPathSumBetweenTwoLeafNode(Node node){
+		// the idea is to keep calculating sum in left subtree of every node and in right subtree as well 
+		// add them and return the maximum one.
+		 maximumPathSumBetweenTwoLeafNodeUtil(node);
+		System.out.println(" val " + max);
+
+	}
+
+	public int calculateMaxSum(Node node, int sum){
+		if(node == null){
+			return sum;
+		}
+		sum = sum + node.val;
+		int leftSum = calculateMaxSum(node.left, sum);
+		int rightSum = calculateMaxSum(node.right, sum);
+
+		return Math.max(leftSum, rightSum);
+	}
+
+	public void maximumPathSumBetweenTwoLeafNodeUtil(Node node){
+		if(node == null){
+			return;
+		}
+
+		int leftSum = calculateMaxSum(node.left, 0);
+		int RightSum = calculateMaxSum(node.right , 0);
+		
+		if(leftSum + RightSum + node.val > max){
+			max = leftSum + RightSum + node.val;
+		}
+
+		maximumPathSumBetweenTwoLeafNodeUtil(node.left);
+		maximumPathSumBetweenTwoLeafNodeUtil(node.right);
+
+	}
+
+	public Node findRightmostNodeinLeftSubtree(Node node){
+		node = node.left;
+		while(node.right != null){
+			node = node.right;
+		}
+
+		return node;
+	}
+
+	public void morrisInorderTraversal(Node node){
+
+		while(node != null){
+
+			if(node.left == null){
+				System.out.println("node val " + node.val);
+				node = node.right;
+			}else{
+				Node rightmostNode = findRightmostNodeinLeftSubtree(node);
+				rightmostNode.right = node;
+				Node temp = node;
+				node = node.left;
+				temp.left = null;
+			}
+		}
+
+	}
+
 	public static void main(String[] args){
 		BST bst = new BST();
 		Scanner scan = new Scanner(System.in);
@@ -862,7 +929,7 @@ class BST{
 
 		//------------------------------
 		// System.out.println(bst.isSumTree(root));
-		//System.out.println("sum is " + bst.calculateSum(root.right.right, 0));
+		// System.out.println("sum is " + bst.calculateSum(root, 0));
 		// System.out.println("Value Found " + bst.printAncestors(root, 111));
 		// bst.levelOfNodeBinaryTree(root, 27, 0);
 		// bst.widthOfBinaryTree(root);
@@ -871,7 +938,9 @@ class BST{
 		// bst.doubleTree(root);
 		// bst.preOrder(root);
 		// bst.printAllNumbersRootToLeafAsASingleNumber(root,0);
-		bst.printLeftView(root);
+		// bst.printLeftView(root);
+		// bst.maximumPathSumBetweenTwoLeafNode(root);
+		bst.morrisInorderTraversal(root);
 
 	}
 }
