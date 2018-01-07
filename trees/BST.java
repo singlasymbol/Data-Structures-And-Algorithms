@@ -780,7 +780,7 @@ class BST{
 
 	}
 
- 	int max = 0;
+ 	int max = -1;
 
 	public void maximumPathSumBetweenTwoLeafNode(Node node){
 		// the idea is to keep calculating sum in left subtree of every node and in right subtree as well 
@@ -827,6 +827,19 @@ class BST{
 		return node;
 	}
 
+	public void printRightView(Node node, int level){
+		if(node == null){
+			return;
+		}
+		if(level > max){
+			System.out.print(node.val + " ");
+			max = level;
+		}
+
+		printRightView(node.right, level + 1);
+		printRightView(node.left, level + 1);
+	}
+
 	public void morrisInorderTraversal(Node node){
 
 		while(node != null){
@@ -843,6 +856,57 @@ class BST{
 			}
 		}
 
+	}
+
+	public void findAllSubsequences(String number){
+		int count = 1;
+
+		while(count < number.length()){
+			int iterator = 0;
+
+			while(iterator < number.length() - 1 && iterator + count < number.length() - 1 ){
+				String temp  = number.substring(iterator, iterator + count);
+				System.out.println(temp);
+				iterator++;
+			}
+
+			count++;
+		}
+	}
+
+	public boolean isBST(Node node, int min , int max){
+		if(node == null){
+			return true;
+		}
+
+		if(node.val <= min || node.val >= max){
+			return false;
+		}
+
+		return isBST(node.left, min, node.val ) && isBST(node.right, node.val, max);
+	}
+
+	static int rankCount = 1;
+
+	public void kthSmallestElement(Node node){
+		if(node == null){
+			return;
+		}
+
+		kthSmallestElement(node.left);
+		node.tempVal = rankCount;
+		rankCount = rankCount + 1;
+		kthSmallestElement(node.right);
+
+	}
+
+	public void inorderWithRank(Node node){
+		if(node == null){
+			return;
+		}
+		inorderWithRank(node.left);
+		System.out.println(" node val "+ node.val + " rank " + node.tempVal);
+		inorderWithRank(node.right);
 	}
 
 	public static void main(String[] args){
@@ -940,7 +1004,15 @@ class BST{
 		// bst.printAllNumbersRootToLeafAsASingleNumber(root,0);
 		// bst.printLeftView(root);
 		// bst.maximumPathSumBetweenTwoLeafNode(root);
-		bst.morrisInorderTraversal(root);
+		// bst.morrisInorderTraversal(root);
+		// bst.reverseAlternateLevels(root); ---- TODO
 
+		// bst.printRightView(root, 0);
+
+		// bst.flattenTree()
+		// bst.findAllSubsequences("1234");
+		System.out.println(bst.isBST(root, Integer.MIN_VALUE, Integer.MAX_VALUE));
+		bst.kthSmallestElement(root);
+		bst.inorderWithRank(root);
 	}
 }
