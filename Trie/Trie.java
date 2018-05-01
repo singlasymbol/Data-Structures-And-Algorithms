@@ -1,4 +1,5 @@
 import java.util.*;
+import java.io.*;  
 
 
 class Trie {
@@ -58,22 +59,41 @@ class Trie {
 		}
 	}
 
-	public static void main(String[] args) {
-		// Scanner scan = new Scanner(System.in);
-		// String newString = scan.nextLine();
+	public static void main(String[] args) throws java.io.IOException {
+
+		InputStreamReader r = new InputStreamReader(System.in);    
+	    BufferedReader br = new BufferedReader(r); 
 		root = new TrieNode();
+		Boolean continueTheScript = true;
+		String str = "";
 
-		insert("symbol");
-		insert("ankur");
-		insert("honey");
+		while(continueTheScript == true){
+			System.out.println("Please choose an option");
+			System.out.println("1. Insert a String");
+			System.out.println("2. Search a String");
+			System.out.println("3. End the program");
 
-		System.out.println("is hoey Present " + search("hoey"));
+			int chosenOption = Integer.parseInt(br.readLine());
+			switch(chosenOption) {
+				case 1 :
+					System.out.println("Enter a string to insert");
+					str = br.readLine();
+					insert(str);
+					break;
+				case 2:
+					System.out.println("Please enter the string to search");
+					str = br.readLine();
+					System.out.println("is " + str + " present? = " + search(str));
+					break;	
+				case 3:
+					continueTheScript = false;	
+					break;
+				default :
+					System.out.println("Should not come here");
+					break;		
+			}
 
-		System.out.println("is symbol Present " + search("symbol"));
-		System.out.println("is ankur Present " + search("ankur"));
-		System.out.println("is an Present " + search("an"));
-		System.out.println("is kur Present " + search("hoey"));
-		System.out.println("is hokur Present " + search("hokur"));
+		}
 
 
 	}
