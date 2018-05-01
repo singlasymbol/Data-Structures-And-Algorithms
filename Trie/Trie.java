@@ -43,16 +43,15 @@ class Trie {
 
 		for(int i = 0; i < stringLength; i++) {
 			int index = str.charAt(i) - 'a';
-			// System.out.println("Character is " + str.charAt(i) + " index " + index + " isNull " + iterator.trie[index]);
 
-			if(iterator.trie[index] == null) {
+			if(iterator.trie[index] == null) { // if there is nothing at index
 				return false;
 			}else {
 				iterator = iterator.trie[index];
 			}
 		}
 
-		if(iterator != null && iterator.endOfWord == true) {
+		if(iterator != null && iterator.endOfWord == true) { // checking if the word has ended.
 			return true;
 		} else {
 			return false;
@@ -63,6 +62,8 @@ class Trie {
 
 		InputStreamReader r = new InputStreamReader(System.in);    
 	    BufferedReader br = new BufferedReader(r); 
+	    //Buffered Reader is synchronous. Scanner isnot. While using switch the program didnot stop for the input,
+	    //while using scanner.
 		root = new TrieNode();
 		Boolean continueTheScript = true;
 		String str = "";
@@ -74,6 +75,7 @@ class Trie {
 			System.out.println("3. End the program");
 
 			int chosenOption = Integer.parseInt(br.readLine());
+			//BufferedReader returns a string
 			switch(chosenOption) {
 				case 1 :
 					System.out.println("Enter a string to insert");
