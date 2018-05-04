@@ -58,6 +58,19 @@ class Trie {
 		}
 	}
 
+
+	static void deleteNode(String str) {
+
+		TrieNode iterator = root;
+		deleteNode(str, iterator);
+	}
+
+	// static void deleteNode(String str, TrieNode iterator) {
+
+	// 	if(iterator.endOfWord)
+
+	// }
+
 	public static void main(String[] args) throws java.io.IOException {
 
 		InputStreamReader r = new InputStreamReader(System.in);    
