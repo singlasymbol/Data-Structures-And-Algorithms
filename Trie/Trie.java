@@ -58,18 +58,40 @@ class Trie {
 		}
 	}
 
-
-	static void deleteNode(String str) {
-
+	static void suggestions(String str) {
 		TrieNode iterator = root;
-		deleteNode(str, iterator);
+
+		for(int i = 0 ; i < str.length(); i++) {
+			int index = str.charAt(i) - 'a';
+
+			if(iterator.trie[index] == null) {
+				System.out.println("No suggestions available for " + str);
+			} else { 
+				iterator = iterator.trie[index]; // reaching the end of query string
+			}
+		}
+
+		printSuggestions(str, iterator, ""); // will perform a dfs from the reference, to all the end of words and print strings
 	}
 
-	// static void deleteNode(String str, TrieNode iterator) {
+	static void printSuggestions(String str, TrieNode iterator, String res){
 
-	// 	if(iterator.endOfWord)
+		if(iterator == null) {
+			return;
+		}
+		for(int i = 0;i < 26;i++) {
+			if(iterator.trie[i] != null) {
+				char toAdd = (char) (i + 97);
+				 // adding the character to the main query, will do till we reach the end of word
+				// making a new string variable everytime as it was overwriting the one, that already exists
+				printSuggestions(str, iterator.trie[i], new String(res + toAdd));
+			}
+		}
 
-	// }
+		if(iterator.endOfWord == true) {
+			System.out.println(str + res);
+		}
+	}
 
 	public static void main(String[] args) throws java.io.IOException {
 
@@ -85,8 +107,8 @@ class Trie {
 			System.out.println("Please choose an option");
 			System.out.println("1. Insert a String");
 			System.out.println("2. Search a String");
-			System.out.println("3. End the program");
-
+			System.out.println("3. Suggestions");
+			System.out.println("4. End the program");
 			int chosenOption = Integer.parseInt(br.readLine());
 			//BufferedReader returns a string
 			switch(chosenOption) {
@@ -101,6 +123,11 @@ class Trie {
 					System.out.println("is " + str + " present? = " + search(str));
 					break;	
 				case 3:
+					System.out.println("Oh! What do you want suggestions for?");
+					str = br.readLine();
+					suggestions(str);
+					break;
+				case 4:
 					continueTheScript = false;	
 					break;
 				default :
